@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Add "Sitemap: https://<live-domain>/sitemap.xml" once the domain is confirmed.
