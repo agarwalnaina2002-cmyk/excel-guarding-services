@@ -16,11 +16,11 @@
     }
   ],
   "redirects": [
-    { "source": "/who-we-are.html", "destination": "/about", "permanent": true },
-    { "source": "/management.html", "destination": "/about#management", "permanent": true },
-    { "source": "/what-we-do.html", "destination": "/services", "permanent": true },
-    { "source": "/excel-equipments.html", "destination": "/equipment", "permanent": true },
-    { "source": "/training-academy.html", "destination": "/academy", "permanent": true },
-    { "source": "/contact-us.html", "destination": "/contact", "permanent": true }
+    { "source": "/who-we-are", "destination": "/about", "permanent": true },
+    { "source": "/management", "destination": "/about#management", "permanent": true },
+    { "source": "/what-we-do", "destination": "/services", "permanent": true },
+    { "source": "/excel-equipments", "destination": "/equipment", "permanent": true },
+    { "source": "/training-academy", "destination": "/academy", "permanent": true },
+    { "source": "/contact-us", "destination": "/contact", "permanent": true }
   ]
 }
