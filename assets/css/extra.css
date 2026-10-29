@@ -5,20 +5,139 @@
    except the nav breakpoint and footer grid, which needed more room.
    ========================================================================== */
 
-/* ---------- Header: six links need more width before the inline nav fits ---------- */
+/* ---------- Header: one row of links with two dropdowns; hamburger below 1181px ---------- */
 @media (max-width: 1180px) {
   .nav { display: none; }
   .menu-toggle { display: inline-flex; }
 }
-@media (min-width: 1181px) and (max-width: 1360px) {
-  .nav { gap: 20px; }
-  .nav__list { gap: 18px; }
-  .nav__list a::before { margin-right: 6px; }
+.site-header.is-solid { box-shadow: 0 12px 32px -18px rgba(0, 0, 0, 0.75); }
+
+.nav__list { align-items: center; gap: clamp(18px, 2vw, 30px); }
+.nav__item { position: relative; }
+.nav__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--bone-dim);
+  cursor: pointer;
+  transition: color var(--t-fast);
+}
+.nav__trigger::before {
+  content: "";
+  width: 5px; height: 5px;
+  margin-right: 2px;
+  background: var(--signal);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform var(--t-med) var(--ease);
+}
+.nav__trigger:hover,
+.nav__item.is-open > .nav__trigger,
+.nav__item.is-current > .nav__trigger { color: var(--bone); }
+.nav__item.is-current > .nav__trigger::before { transform: scale(1); }
+.chev { width: 12px; height: 12px; transition: transform var(--t-med) var(--ease); }
+.nav__item.is-open .chev { transform: rotate(180deg); }
+
+.nav__menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: -18px;
+  z-index: 120;
+  min-width: 248px;
+  padding: 10px;
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 0 28px 60px -20px rgba(0, 0, 0, 0.8), 0 2px 0 var(--signal) inset;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-med) var(--ease), visibility 0s linear var(--t-fast);
+}
+/* Bridge the gap so the pointer can travel from trigger to menu without closing it */
+.nav__menu::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+.nav__item.is-open > .nav__menu,
+html:not(.js) .has-menu:hover > .nav__menu,
+html:not(.js) .has-menu:focus-within > .nav__menu {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-med) var(--ease);
+}
+.nav__menu--wide { width: 480px; }
+.nav__menu--wide ul { display: grid; grid-template-columns: 1fr 1fr; column-gap: 4px; }
+.nav__menu--wide li:first-child { grid-column: 1 / -1; border-bottom: 1px solid var(--line); margin-bottom: 6px; padding-bottom: 6px; }
+.nav__menu a {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 3px;
+  font-size: 0.875rem;
+  color: var(--bone-dim);
+  text-decoration: none;
+  transition: background-color var(--t-fast), color var(--t-fast);
+}
+.nav__menu a:hover, .nav__menu a:focus-visible { background: var(--ink-3); color: var(--bone); }
+.nav__menu a[aria-current="page"] { color: var(--signal); }
+.nav__menu a:focus-visible { outline-offset: -2px; }
+/* Dropdown links don't get the dot marker used by top-level links */
+.nav__list .nav__menu a::before { content: none; }
+
+.nav__list .nav__cta { min-height: 42px; padding: 0 18px; gap: 0; color: var(--ink); }
+.nav__list .nav__cta::before { content: none; }
+.nav__list .nav__cta[aria-current="page"] { --btn-bg: var(--bone); }
+
+@media (min-width: 1181px) and (max-width: 1320px) {
+  .nav__list { gap: 16px; }
 }
 
-.mobile-menu__list a { font-size: clamp(1.875rem, 7.4vw, 2.75rem); padding: 14px 0; }
+/* ---------- Mobile menu: expandable groups ---------- */
+.mobile-menu__list a,
+.mobile-menu__toggle { font-size: clamp(1.75rem, 7vw, 2.5rem); padding: 12px 0; }
+.mobile-menu__toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: 0;
+  font-family: var(--font-serif);
+  line-height: 1.05;
+  text-align: left;
+  color: var(--bone);
+  cursor: pointer;
+}
+.mobile-menu__toggle.is-current { color: var(--signal); }
+.mobile-menu__plus { position: relative; width: 16px; height: 16px; flex: none; }
+.mobile-menu__plus::before,
+.mobile-menu__plus::after { content: ""; position: absolute; left: 0; right: 0; top: 7.5px; height: 1.5px; background: currentColor; transition: transform var(--t-med) var(--ease); }
+.mobile-menu__plus::after { transform: rotate(90deg); }
+.mobile-menu__toggle[aria-expanded="true"] .mobile-menu__plus::after { transform: rotate(0); }
+.mobile-menu__sub { padding: 0 0 14px 2px; display: grid; }
+.mobile-menu__sub[hidden] { display: none; }
+.mobile-menu__list .mobile-menu__sub li { border-bottom: 0; }
+.mobile-menu__list .mobile-menu__sub a {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 6px 0;
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  color: var(--bone-dim);
+}
+.mobile-menu__list .mobile-menu__sub a[aria-current="page"] { color: var(--signal); }
+@media (min-width: 600px) {
+  #mm-services { grid-template-columns: 1fr 1fr; column-gap: 24px; }
+}
 @media (max-height: 700px) {
-  .mobile-menu__list a { font-size: 1.625rem; padding: 10px 0; }
+  .mobile-menu__list a, .mobile-menu__toggle { font-size: 1.625rem; padding: 10px 0; }
 }
 .mobile-menu__call { display: grid; gap: 4px; }
 .mobile-menu__call a { color: var(--bone); text-decoration: none; font-size: 1.0625rem; }
@@ -336,3 +455,96 @@
 .gallery figure:first-child { grid-template-rows: 1fr auto; }
 .gallery figcaption .tbc { justify-self: start; }
 .on-paper .statement em { color: var(--signal-deep); }
+
+/* ==========================================================================
+   Services page: grouped service list, guard-post accordion, why, journey, FAQ
+   ========================================================================== */
+.svc-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px clamp(20px, 2.5vw, 40px); }
+.svc-group__head { padding-top: 18px; border-top: 1px solid var(--line-strong); margin-bottom: 8px; }
+.svc-group__head h3 { margin-top: 10px; font-size: clamp(1.5rem, 1.15rem + 1.1vw, 2.125rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; }
+.svc-group__head p { margin-top: 8px; color: var(--bone-dim); font-size: 0.9375rem; }
+.svc { padding: 16px 0; border-bottom: 1px solid var(--line); scroll-margin-top: calc(var(--header-h) + 24px); }
+.svc h4 { font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.01em; }
+.svc--lead h4::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 10px 2px 0; background: var(--signal); border-radius: 50%; }
+.svc p { margin-top: 4px; color: var(--bone-dim); font-size: 0.9375rem; max-width: 40ch; }
+.svc a { color: var(--bone); text-underline-offset: 3px; }
+.svc a:hover { color: var(--signal); }
+.svc:target { background: linear-gradient(90deg, rgba(227, 163, 61, 0.12), transparent 70%); }
+@media (max-width: 1023px) { .svc-groups { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 680px) { .svc-groups { grid-template-columns: 1fr; } }
+
+/* Guard posts: native <details>, so they open without JavaScript too */
+.posts { border-top: 1px solid var(--paper-ink); }
+.post { border-bottom: 1px solid var(--paper-line); scroll-margin-top: calc(var(--header-h) + 24px); }
+.post summary {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 0.9fr) minmax(0, 1.4fr) 20px;
+  gap: 8px 24px;
+  align-items: baseline;
+  padding: 22px 0;
+  cursor: pointer;
+  list-style: none;
+}
+.post summary::-webkit-details-marker { display: none; }
+.post__name { font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.625rem); font-weight: 500; letter-spacing: -0.02em; }
+.post__line { color: var(--paper-mute); font-size: 0.9375rem; }
+.post__icon { position: relative; width: 14px; height: 14px; align-self: center; }
+.post__icon::before, .post__icon::after { content: ""; position: absolute; left: 0; right: 0; top: 6.5px; height: 1.5px; background: var(--paper-ink); transition: transform var(--t-med) var(--ease); }
+.post__icon::after { transform: rotate(90deg); }
+.post[open] .post__icon::after { transform: rotate(0); }
+.post summary:hover .post__name { color: var(--signal-deep); }
+.post__body { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 32px; padding: 4px 0 32px 72px; }
+.post__body dt { margin-bottom: 8px; }
+.post__body dd { font-size: 0.9375rem; }
+.post__body dd li + li { margin-top: 4px; }
+.post__body dd li::before { content: "— "; color: var(--paper-mute); }
+@media (max-width: 900px) {
+  .post summary { grid-template-columns: 36px 1fr 20px; }
+  .post__line { grid-column: 2; grid-row: 2; }
+  .post__icon { grid-column: 3; grid-row: 1; }
+  .post__body { grid-template-columns: 1fr; padding-left: 60px; }
+}
+
+/* Why EGS */
+.why { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px clamp(20px, 2.5vw, 36px); }
+.why li { display: grid; grid-template-rows: auto auto 1fr auto; gap: 12px; padding-top: 18px; border-top: 1px solid var(--line-strong); }
+.why h3 { font-size: 1.375rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; }
+.why p { color: var(--bone-dim); font-size: 0.9375rem; }
+.why .link { justify-self: start; font-size: 0.875rem; }
+@media (max-width: 1023px) { .why { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .why { grid-template-columns: 1fr; } }
+
+.sectors { margin-top: clamp(56px, 6vw, 88px); display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+.sectors__list { display: flex; flex-wrap: wrap; gap: 10px; }
+.sectors__list li { padding: 8px 14px; border: 1px solid var(--line-strong); border-radius: 2px; font-size: 0.9375rem; }
+
+/* How it works */
+.journey { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); counter-reset: j; border-top: 1px solid var(--line-strong); }
+.journey li { position: relative; padding: 26px clamp(12px, 1.6vw, 24px) 0 0; }
+.journey li::before { content: ""; position: absolute; left: 0; top: -4px; width: 7px; height: 7px; background: var(--ink-2); border: 1px solid var(--signal); }
+.journey h3 { margin: 12px 0 8px; font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: clamp(1.75rem, 1.3rem + 1.2vw, 2.375rem); line-height: 1; }
+.journey p { color: var(--bone-dim); font-size: 0.9375rem; max-width: 26ch; }
+@media (max-width: 900px) {
+  .journey { grid-template-columns: 1fr; border-top: 0; border-left: 1px solid var(--line-strong); margin-left: 4px; }
+  .journey li { padding: 0 0 28px 28px; }
+  .journey li::before { left: -5px; top: 4px; }
+  .journey h3 { margin-top: 6px; }
+}
+
+/* FAQ */
+.faq { border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  display: flex; justify-content: space-between; align-items: center; gap: 20px;
+  min-height: 64px; padding: 16px 0;
+  font-size: 1.0625rem; font-weight: 500; cursor: pointer; list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-mono); color: var(--signal); font-size: 1.25rem; flex: none; }
+.faq details[open] summary::after { content: "–"; }
+.faq summary:hover { color: var(--signal); }
+.faq details p { padding: 0 0 22px; color: var(--bone-dim); max-width: 62ch; }
+.faq a { color: var(--bone); text-underline-offset: 3px; }
+
+/* "To confirm" tags on paper: darker amber so the placeholder text passes WCAG AA (4.5:1) */
+.on-paper .tbc, .cat .tbc { color: #7f5310; }

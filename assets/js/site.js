@@ -10,7 +10,7 @@
     const update = () => {
       const y = window.scrollY;
       header.classList.toggle("is-solid", y > 24);
-      const menuOpen = document.body.classList.contains("menu-open");
+      const menuOpen = document.body.classList.contains("menu-open") || header.querySelector(".nav__item.is-open");
       const hide = !menuOpen && y > 480 && y > lastY + 4 && !header.contains(document.activeElement);
       if (hide) header.classList.add("is-hidden");
       else if (y < lastY - 4 || y < 480) header.classList.remove("is-hidden");
@@ -29,7 +29,16 @@
   const menu = document.querySelector("[data-menu]");
   if (toggle && menu) {
     const label = toggle.querySelector("[data-menu-label]");
-    const focusables = () => [toggle, ...menu.querySelectorAll("a, button")];
+    // Only items that are showing: links inside a collapsed group can't take focus.
+    const focusables = () => [toggle, ...[...menu.querySelectorAll("a, button")].filter((el) => el.offsetParent !== null)];
+    menu.querySelectorAll("[data-submenu-toggle]").forEach((btn) => {
+      const sub = document.getElementById(btn.getAttribute("aria-controls"));
+      btn.addEventListener("click", () => {
+        const open = btn.getAttribute("aria-expanded") !== "true";
+        btn.setAttribute("aria-expanded", String(open));
+        sub.hidden = !open;
+      });
+    });
     const setOpen = (open) => {
       toggle.setAttribute("aria-expanded", String(open));
       menu.classList.toggle("is-open", open);
@@ -55,6 +64,72 @@
     });
     window.matchMedia("(min-width: 1181px)").addEventListener("change", (e) => { if (e.matches) setOpen(false); });
   }
+
+  /* ---------- Desktop dropdowns: hover, focus or click; Escape, outside click and arrow keys ---------- */
+  const dropItems = [...document.querySelectorAll("[data-nav] .has-menu")];
+  if (dropItems.length) {
+    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const set = (item, open) => {
+      item.classList.toggle("is-open", open);
+      item.querySelector(".nav__trigger").setAttribute("aria-expanded", String(open));
+    };
+    const closeAll = (except) => dropItems.forEach((i) => { if (i !== except) set(i, false); });
+    dropItems.forEach((item) => {
+      const trigger = item.querySelector(".nav__trigger");
+      const links = () => [...item.querySelectorAll(".nav__menu a")];
+      let timer;
+      let openedBy = null; // a click only closes a menu that a click opened, so hover-then-click doesn't flicker shut
+      let quiet = false; // set while returning focus after Escape, so focusin doesn't reopen
+      trigger.addEventListener("click", () => {
+        const close = item.classList.contains("is-open") && openedBy === "click";
+        closeAll(item);
+        set(item, !close);
+        openedBy = close ? null : "click";
+      });
+      item.addEventListener("mouseenter", () => {
+        if (!canHover.matches) return;
+        clearTimeout(timer);
+        if (!item.classList.contains("is-open")) openedBy = "hover";
+        closeAll(item);
+        set(item, true);
+      });
+      item.addEventListener("mouseleave", () => {
+        if (!canHover.matches) return;
+        timer = setTimeout(() => { if (!item.contains(document.activeElement)) { set(item, false); openedBy = null; } }, 160);
+      });
+      item.addEventListener("focusin", () => {
+        if (quiet) return;
+        if (!item.classList.contains("is-open")) openedBy = "focus";
+        closeAll(item);
+        set(item, true);
+      });
+      item.addEventListener("focusout", (e) => { if (!item.contains(e.relatedTarget)) { set(item, false); openedBy = null; } });
+      item.addEventListener("keydown", (e) => {
+        const list = links();
+        const i = list.indexOf(document.activeElement);
+        if (e.key === "Escape") {
+          set(item, false);
+          openedBy = null;
+          quiet = true; trigger.focus(); quiet = false;
+          return;
+        }
+        if (e.key === "ArrowDown") { e.preventDefault(); set(item, true); (list[i + 1] || list[0]).focus(); }
+        if (e.key === "ArrowUp") { e.preventDefault(); set(item, true); (i > 0 ? list[i - 1] : list[list.length - 1]).focus(); }
+        if (e.key === "Home" && i >= 0) { e.preventDefault(); list[0].focus(); }
+        if (e.key === "End" && i >= 0) { e.preventDefault(); list[list.length - 1].focus(); }
+      });
+    });
+    document.addEventListener("click", (e) => { if (!e.target.closest("[data-nav] .has-menu")) closeAll(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
+  }
+
+  /* ---------- Open a <details> panel when a link points at it (e.g. /services#static) ---------- */
+  const openTarget = () => {
+    const el = window.location.hash && document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+    if (el && el.tagName === "DETAILS") el.open = true;
+  };
+  openTarget();
+  window.addEventListener("hashchange", openTarget);
 
   /* ---------- Section reveals ---------- */
   const reveals = document.querySelectorAll(".reveal");
