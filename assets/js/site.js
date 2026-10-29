@@ -53,7 +53,7 @@
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     });
-    window.matchMedia("(min-width: 861px)").addEventListener("change", (e) => { if (e.matches) setOpen(false); });
+    window.matchMedia("(min-width: 1181px)").addEventListener("change", (e) => { if (e.matches) setOpen(false); });
   }
 
   /* ---------- Section reveals ---------- */
@@ -135,7 +135,7 @@
       ["Assess", "We walk your site with you to look at entrances, blind spots, peak times, existing systems and what has gone wrong before.", "A written summary of risks and recommended posts"],
       ["Plan", "We turn the assessment into posts, hours and instructions. You review the post instructions before any officer is deployed.", "Post instructions, staffing schedule and escalation list"],
       ["Deploy", "Officers are inducted on site and shadow before working alone. The first shifts are handed over in person.", "Named officers and a start-date handover"],
-      ["Supervise", "Supervisors visit, including unannounced. They check logs, patrol records and officer conduct against the post instructions.", "Supervisor visit records"],
+      ["Supervise", 'Supervisors visit, including at night, and check logs, patrol records and officer conduct against the post instructions. <span class="tbc">Confirm whether visits are also unannounced</span>', "Monthly guard performance report"],
       ["Report", "Incidents are written up in the shift they happen and escalated to your named contacts. Routine activity goes into regular reports.", "Incident reports and periodic activity reports"],
       ["Review", "We meet with you to go through incidents, findings and changes on your site, and adjust posts and instructions to match.", "Agreed changes, fed into the next plan"],
     ];
@@ -150,7 +150,7 @@
         nodes.forEach((n) => n.setAttribute("aria-pressed", String(n === node)));
         idx.textContent = `Stage ${String(i + 1).padStart(2, "0")} of 06`;
         title.textContent = stages[i][0];
-        text.textContent = stages[i][1];
+        text.innerHTML = stages[i][1]; // static strings above; some carry a "to confirm" tag
         out.textContent = stages[i][2];
       });
     });
@@ -179,6 +179,19 @@
       if (err) err.textContent = msg;
       return !msg;
     };
+    // "What is this about?": pre-select from ?topic= and show the guarding-only questions only when they apply.
+    const topics = [...form.querySelectorAll('input[name="topic"]')];
+    const guardingOnly = [...form.querySelectorAll("[data-guarding-only]")];
+    const syncTopic = () => {
+      const chosen = topics.find((t) => t.checked)?.value;
+      guardingOnly.forEach((el) => { el.hidden = Boolean(chosen) && chosen !== "guarding"; });
+    };
+    const wanted = new URLSearchParams(window.location.search).get("topic");
+    const match = topics.find((t) => t.value === wanted);
+    if (match) match.checked = true;
+    topics.forEach((t) => t.addEventListener("change", syncTopic));
+    syncTopic();
+
     const fields = [...form.querySelectorAll("input:not([type=radio]):not([type=checkbox]), select, textarea")];
     fields.forEach((f) => {
       f.addEventListener("blur", () => { if (f.value || f.getAttribute("aria-invalid") === "true") showError(f); });

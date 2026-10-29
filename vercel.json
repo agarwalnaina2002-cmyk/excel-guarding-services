@@ -1,0 +1,26 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }]
+    }
+  ],
+  "redirects": [
+    { "source": "/who-we-are.html", "destination": "/about", "permanent": true },
+    { "source": "/management.html", "destination": "/about#management", "permanent": true },
+    { "source": "/what-we-do.html", "destination": "/services", "permanent": true },
+    { "source": "/excel-equipments.html", "destination": "/equipment", "permanent": true },
+    { "source": "/training-academy.html", "destination": "/academy", "permanent": true },
+    { "source": "/contact-us.html", "destination": "/contact", "permanent": true }
+  ]
+}

@@ -1,0 +1,338 @@
+/* ==========================================================================
+   Excel Guarding Services — additions for the group pages
+   (Equipment, Academy, About, Credentials, Gallery). Loaded after site.css
+   and built only from its tokens; nothing in site.css is redefined here
+   except the nav breakpoint and footer grid, which needed more room.
+   ========================================================================== */
+
+/* ---------- Header: six links need more width before the inline nav fits ---------- */
+@media (max-width: 1180px) {
+  .nav { display: none; }
+  .menu-toggle { display: inline-flex; }
+}
+@media (min-width: 1181px) and (max-width: 1360px) {
+  .nav { gap: 20px; }
+  .nav__list { gap: 18px; }
+  .nav__list a::before { margin-right: 6px; }
+}
+
+.mobile-menu__list a { font-size: clamp(1.875rem, 7.4vw, 2.75rem); padding: 14px 0; }
+@media (max-height: 700px) {
+  .mobile-menu__list a { font-size: 1.625rem; padding: 10px 0; }
+}
+.mobile-menu__call { display: grid; gap: 4px; }
+.mobile-menu__call a { color: var(--bone); text-decoration: none; font-size: 1.0625rem; }
+
+/* ---------- Footer: three link columns and the three companies ---------- */
+.site-footer .footer__brand { grid-column: 1 / span 5; }
+.site-footer .footer__col { grid-column: span 2; }
+.site-footer .footer__col--first { grid-column: 7 / span 2; }
+.footer__brand p { margin-top: 20px; max-width: 34ch; color: var(--bone-dim); font-size: 0.9375rem; }
+
+.footer__entities {
+  margin-top: clamp(48px, 6vw, 80px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px clamp(16px, 2vw, 32px);
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+.entity { display: grid; gap: 10px; align-content: start; font-size: 0.9375rem; color: var(--bone-dim); }
+.entity h2, .entity h3 { font-size: 1rem; font-weight: 500; letter-spacing: -0.005em; color: var(--bone); }
+.entity address { font-style: normal; max-width: 34ch; }
+.entity ul { display: grid; gap: 2px; }
+.entity a { color: var(--bone); text-decoration: none; display: inline-flex; min-height: 32px; align-items: center; }
+.entity a:hover { color: var(--signal); }
+
+@media (max-width: 900px) {
+  .site-footer .footer__brand { grid-column: 1 / -1; margin-bottom: 48px; }
+  .site-footer .footer__col,
+  .site-footer .footer__col--first { grid-column: span 4; margin-bottom: 32px; }
+  .footer__entities { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .site-footer .footer__col,
+  .site-footer .footer__col--first { grid-column: span 6; }
+}
+
+/* ---------- Photo slots: frames waiting for EGS's own photographs ---------- */
+.slot {
+  position: relative;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  aspect-ratio: var(--ratio, 4 / 3);
+  padding: 24px;
+  border: 1px dashed var(--line-strong);
+  background:
+    repeating-linear-gradient(135deg, transparent 0 14px, rgba(236, 232, 225, 0.03) 14px 15px),
+    var(--ink-2);
+  text-align: center;
+  color: var(--bone-dim);
+}
+.slot .label { color: var(--signal); }
+.slot p { font-size: 0.875rem; max-width: 30ch; margin-inline: auto; }
+.on-paper .slot {
+  border-color: rgba(22, 23, 26, 0.3);
+  background:
+    repeating-linear-gradient(135deg, transparent 0 14px, rgba(22, 23, 26, 0.04) 14px 15px),
+    #dedad1;
+  color: var(--paper-mute);
+}
+.on-paper .slot .label { color: var(--signal-deep); }
+.slot--wide { --ratio: 21 / 9; }
+.slot--tall { --ratio: 4 / 5; }
+@media (max-width: 900px) { .slot--wide { --ratio: 4 / 3; } }
+
+.page-hero__slot { margin-top: clamp(40px, 6vw, 72px); }
+
+/* ---------- Gallery ---------- */
+.gallery-group + .gallery-group { margin-top: clamp(64px, 8vw, 120px); }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 32px);
+}
+.gallery figure { grid-column: span 4; display: grid; gap: 12px; align-content: start; }
+.gallery figure:first-child { grid-column: span 8; grid-row: span 2; }
+.gallery figure:first-child .slot { aspect-ratio: auto; height: 100%; min-height: 320px; }
+.gallery figcaption { display: grid; gap: 4px; font-size: 0.875rem; color: var(--bone-dim); }
+@media (max-width: 900px) {
+  .gallery figure, .gallery figure:first-child { grid-column: span 6; grid-row: auto; }
+  .gallery figure:first-child .slot { aspect-ratio: 4 / 3; height: auto; min-height: 0; }
+}
+@media (max-width: 560px) {
+  .gallery figure, .gallery figure:first-child { grid-column: 1 / -1; }
+}
+
+/* ---------- Three businesses band ---------- */
+.units {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(16px, 2vw, 32px);
+}
+.unit {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 14px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-strong);
+}
+.unit h3 { font-size: clamp(1.5rem, 1.1rem + 1.3vw, 2.25rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.02; }
+.unit h3 .serif { color: var(--signal); }
+.unit p { color: var(--bone-dim); font-size: 0.9375rem; max-width: 36ch; }
+.unit .link { justify-self: start; }
+.on-paper .unit { border-top-color: var(--paper-ink); }
+.on-paper .unit p { color: var(--paper-mute); }
+.on-paper .unit h3 .serif { color: var(--signal-deep); }
+.on-paper .link:hover { color: var(--signal-deep); }
+@media (max-width: 900px) {
+  .units { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* ---------- Leadership strip / management ---------- */
+.leader { align-items: start; }
+.leader__portrait { grid-column: 1 / span 3; }
+.leader__body { grid-column: 5 / span 8; }
+.leader__name { font-size: clamp(2rem, 1.3rem + 2.6vw, 3.75rem); font-weight: 500; letter-spacing: -0.035em; line-height: 1; }
+.leader__role { margin-top: 12px; display: block; }
+.leader__facts { margin-top: 32px; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+.leader__facts li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9375rem;
+}
+.leader__facts li::before { content: ""; width: 10px; height: 1px; margin-top: 0.8em; background: var(--signal); }
+.leader + .leader { margin-top: clamp(72px, 9vw, 128px); }
+@media (max-width: 900px) {
+  .leader__portrait { grid-column: 1 / span 6; margin-bottom: 32px; }
+  .leader__body { grid-column: 1 / -1; }
+  .leader__facts { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .leader__portrait { grid-column: 1 / -1; }
+}
+
+.letter { margin-top: 28px; display: grid; gap: 1em; color: var(--bone-dim); max-width: 62ch; }
+.letter p:first-child { font-family: var(--font-serif); font-size: clamp(1.5rem, 1.2rem + 1vw, 2.125rem); line-height: 1.2; color: var(--bone); }
+
+.assoc { border-top: 1px solid var(--line); columns: 2; column-gap: clamp(24px, 4vw, 56px); }
+.assoc li {
+  break-inside: avoid;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 8px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9375rem;
+}
+.assoc .index { padding-top: 3px; }
+.on-paper .assoc, .on-paper .assoc li { border-color: var(--paper-line); }
+@media (max-width: 640px) { .assoc { columns: 1; } }
+
+/* Homepage strip: compact version of the leadership block */
+.strip { align-items: start; }
+.strip__a { grid-column: 1 / span 5; }
+.strip__b { grid-column: 7 / span 6; }
+.strip__b .label { display: block; margin-bottom: 14px; }
+@media (max-width: 900px) {
+  .strip__a, .strip__b { grid-column: 1 / -1; }
+  .strip__b { margin-top: 40px; }
+}
+
+/* ---------- Values (3 P's) ---------- */
+.values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.values > div { padding: 24px 20px 8px 0; }
+.values > div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+.values strong {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.25rem, 1.5rem + 2.6vw, 4rem);
+  line-height: 1;
+  color: var(--signal);
+}
+@media (max-width: 900px) {
+  .values { grid-template-columns: 1fr; }
+  .values > div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
+}
+
+/* ---------- Grouped point lists (Why EGS, academy provisions) ---------- */
+.groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px clamp(16px, 2vw, 32px); }
+.group h3 { font-size: 1.25rem; font-weight: 500; letter-spacing: -0.015em; margin: 10px 0 16px; }
+.group ul { border-top: 1px solid var(--line); }
+.group li { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 0.9375rem; color: var(--bone-dim); }
+.on-paper .group ul, .on-paper .group li { border-color: var(--paper-line); }
+.on-paper .group li { color: var(--paper-ink); }
+@media (max-width: 900px) { .groups { grid-template-columns: 1fr; } }
+
+/* ---------- Services: more services grid ---------- */
+.more { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(16px, 2vw, 32px); }
+.more li {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 6px 8px;
+  padding: 22px 0;
+  border-top: 1px solid var(--paper-line);
+}
+.more h3 { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; }
+.more p { grid-column: 2; font-size: 0.9375rem; color: var(--paper-mute); max-width: 34ch; }
+.more .status { grid-column: 2; margin-top: 4px; font-size: 0.8125rem; }
+.more .index { padding-top: 4px; }
+.more a { color: inherit; }
+@media (max-width: 1023px) { .more { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .more { grid-template-columns: 1fr; } }
+
+.lead-note { margin-bottom: clamp(32px, 4vw, 48px); }
+
+/* ---------- Equipment catalogue ---------- */
+.catalogue { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(16px, 2vw, 32px); }
+.cat { grid-column: span 4; background: var(--paper); color: var(--paper-ink); padding: clamp(20px, 2.6vw, 32px); display: grid; align-content: start; gap: 16px; }
+.cat--wide { grid-column: span 8; }
+.cat__head { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--paper-ink); }
+.cat__head .label { color: var(--paper-mute); }
+.cat h3 { font-family: var(--font-serif); font-weight: 400; font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem); line-height: 1.05; }
+.cat ul { border-top: 1px solid var(--paper-line); }
+.cat li { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--paper-line); font-size: 0.9375rem; }
+.cat li abbr { font-family: var(--font-mono); font-size: 0.75rem; color: var(--paper-mute); text-decoration: none; align-self: center; }
+.cat--wide ul { columns: 2; column-gap: 32px; border-top: 0; }
+.cat--wide li { break-inside: avoid; border-top: 0; }
+.cat .tbc { color: var(--signal-deep); }
+@media (max-width: 1023px) {
+  .cat, .cat--wide { grid-column: span 6; }
+}
+@media (max-width: 640px) {
+  .cat, .cat--wide { grid-column: 1 / -1; }
+  .cat--wide ul { columns: 1; }
+}
+
+/* ---------- Claims with evidence slots (credentials) ---------- */
+.claims { border-top: 1px solid var(--paper-ink); }
+.claim {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 12px clamp(16px, 2.5vw, 40px);
+  padding: 26px 0;
+  border-bottom: 1px solid var(--paper-line);
+  align-items: baseline;
+}
+.claim h3 { font-size: 1.1875rem; font-weight: 500; letter-spacing: -0.01em; }
+.claim p { font-size: 0.9375rem; color: var(--paper-mute); }
+.claim__evidence { display: grid; gap: 6px; }
+.claims-head { display: grid; grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1.2fr) minmax(0, 1fr); gap: 12px clamp(16px, 2.5vw, 40px); padding-bottom: 12px; }
+@media (max-width: 900px) {
+  .claims-head { display: none; }
+  .claim { grid-template-columns: 40px 1fr; }
+  .claim > p, .claim__evidence { grid-column: 2; }
+}
+
+/* Registration slots */
+.registry { border-top: 1px solid var(--line); }
+.registry > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.registry dt { font-weight: 500; }
+.registry dd { color: var(--bone-dim); font-size: 0.9375rem; }
+@media (max-width: 760px) {
+  .registry > div { grid-template-columns: 1fr; }
+}
+
+/* ---------- Academy ---------- */
+.course { border-top: 1px solid var(--line); }
+.course li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 12px 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.course h3 { font-size: 1.25rem; font-weight: 500; letter-spacing: -0.015em; }
+.course p { color: var(--bone-dim); font-size: 0.9375rem; }
+@media (max-width: 760px) {
+  .course li { grid-template-columns: 1fr; gap: 8px; }
+}
+
+.hours {
+  display: grid;
+  gap: 4px;
+}
+.hours strong {
+  font-weight: 500;
+  font-size: clamp(5rem, 3rem + 9vw, 11rem);
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  font-variant-numeric: tabular-nums;
+}
+.hours strong span { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 0.32em; letter-spacing: -0.01em; color: var(--signal); margin-left: 0.15em; }
+
+/* ---------- Contact: topic selector and per-company details ---------- */
+.field[hidden], .choices[hidden] { display: none; }
+.on-paper .contact-list { border-top-color: var(--paper-line); }
+.on-paper .contact-list > div { border-bottom-color: var(--paper-line); }
+.on-paper .contact-list dd { color: var(--paper-ink); }
+.contact-list dd a { color: inherit; }
+.contact-entities { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.contact-entities .entity { padding: 22px 0; border-bottom: 1px solid var(--line); }
+.contact-entities .entity .label { color: var(--mute); }
+
+/* ---------- Small helpers ---------- */
+.note { margin-top: 20px; font-size: 0.875rem; color: var(--mute); max-width: 60ch; }
+.on-paper .note { color: var(--paper-mute); }
+.stack-lg > * + * { margin-top: clamp(40px, 5vw, 64px); }
+.address { font-style: normal; color: var(--bone-dim); }
+
+/* ---------- Fixes found in visual QA ---------- */
+.gallery figure:first-child { grid-template-rows: 1fr auto; }
+.gallery figcaption .tbc { justify-self: start; }
+.on-paper .statement em { color: var(--signal-deep); }

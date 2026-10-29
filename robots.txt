@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-# Add "Sitemap: https://<live-domain>/sitemap.xml" once the domain is confirmed.
+# Update this line if the site moves to its own domain.
+Sitemap: https://excel-guarding-services.vercel.app/sitemap.xml

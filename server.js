@@ -19,6 +19,8 @@ http
   .createServer((req, res) => {
     let urlPath = decodeURIComponent(req.url.split("?")[0]);
     if (urlPath.endsWith("/")) urlPath += "index.html";
+    // Mirror Vercel's cleanUrls: /about serves about.html
+    else if (!path.extname(urlPath)) urlPath += ".html";
     const file = path.normalize(path.join(root, urlPath));
     if (!file.startsWith(root) || path.basename(file) === "server.js") {
       res.writeHead(403).end();
